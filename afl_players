@@ -1,0 +1,28 @@
+#!/bin/python3
+#blago
+#5/6/20
+from csv import reader
+import os
+import glob
+import pandas as pd
+
+os.chdir('/Users/blago/Desktop/PythonCourse/AFLv2_simulator/team_lists')
+
+class Player:
+    def __init__(self, last_name, team, position):
+        self.last_name = last_name
+        self.team = team
+        self.position = position
+
+    def __repr__(self):
+        return f'{self.last_name.upper()} - {self.team}'
+
+all_files = [i for i in glob.glob('*.csv')]
+combined_files = pd.concat([pd.read_csv(f) for f in all_files])
+combined_files.to_csv('combined_files.csv', index=False, encoding='utf-8-sig')
+
+with open('combined_files.csv') as csvfile:
+    csv_reader = reader(csvfile)
+    next(csv_reader)
+    for row in csv_reader:
+        print(Player(row[0], row[1], row[2]))

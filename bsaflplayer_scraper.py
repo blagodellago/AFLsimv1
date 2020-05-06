@@ -5,6 +5,7 @@
 import requests
 from bs4 import BeautifulSoup
 from csv import writer
+from pathlib import Path
 
 urls = {
     'https://www.afc.com.au/teams/afl': 'Adelaide Crows',
@@ -18,7 +19,7 @@ urls = {
     'https://www.gwsgiants.com.au/teams/afl': 'Greater Western Sydney Giants',
     'https://www.hawthornfc.com.au/teams/afl': 'Hawthorn Hawks',
     'https://www.melbournefc.com.au/teams/afl': 'Melbourne Demons',
-    'https://www.nmfc.com.au/teams/afl': 'North Melbourne Kangaroos',
+    'https://www.nmfc.com.au/teams/afl/players': 'North Melbourne Kangaroos',
     'https://www.portadelaidefc.com.au/teams/afl': 'Port Adelaide Power',
     'https://www.richmondfc.com.au/football/afl/squad': 'Richmond Tigers',
     'https://www.saints.com.au/teams/mens': 'St. Kilda Saints',
@@ -33,7 +34,8 @@ for url,team in urls.items():
     soup = BeautifulSoup(response.text, 'html.parser')
     player_stats = soup.find_all(class_='squad-list__item')
 
-    with open(f'{filename}.csv', 'w') as csv_file:
+    path = Path('/Users/blakeedmond/Desktop/PythonCourse/AFLv2_simulator/team_lists')
+    with open(f'{path}/{filename}.csv', 'w') as csv_file:
         csv_writer = writer(csv_file)
         csv_writer.writerow(['LAST NAME', 'TEAM', 'POSITION'])
         for player in player_stats:

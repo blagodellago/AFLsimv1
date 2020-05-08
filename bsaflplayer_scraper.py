@@ -9,7 +9,6 @@ from csv import writer, reader
 from players_afl import Team, Player
 import pandas as pd
 import glob
-import random
 
 #SET THE FILE path
 path = '/Users/blakeedmond/Desktop/PythonCourse/AFLv2_simulator'

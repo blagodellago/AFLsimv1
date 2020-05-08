@@ -51,8 +51,8 @@ for team, url in teams_urls.items():
 
 #CONCATENATE ALL TEAM_LISTS into one afl_list CSV file
 all_files = [i for i in glob.glob('*.csv')]
-afl_list = pd.concat([pd.read_csv(f) for f in all_files])
-afl_list.to_csv(f'{path}/afl_list.csv', index=False, encoding='utf-8-sig')
+combined_files = pd.concat([pd.read_csv(f) for f in all_files])
+combined_files.to_csv(f'{path}/combined_files.csv', index=False, encoding='utf-8-sig')
 
 #GENERATE PLAYER OBJECTS from data contatined in combined_files.csv
 os.chdir(path)

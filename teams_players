@@ -1,0 +1,65 @@
+#!/bin/python3
+#blago
+#5/6/20
+
+class Team:
+    instances = []
+
+    def __init__(self, name):
+        self.name = name
+        self.roster = []
+        self.wins = 0
+        self.losses = 0
+        self.draws = 0
+        self.games_played = 0
+        self.percentage = 0.0
+        self.instances.append(self)
+
+    def __repr__(self):
+        return self.name
+
+    def draft_player(self, player):
+        if player in Player.undrafted:
+            if player.team != self.name:
+                player.team = self.name
+            else:
+                pass
+            self.roster.append(player)
+            Player.undrafted.remove(player)
+        else:
+            raise ValueError('Player not able to be drafted')
+
+    def delist_player(self, player):
+        self.roster.remove(player)
+        player.team = ''
+        Player.undrafted.append(player)
+
+class Player:
+    instances = []
+    undrafted = []
+
+    @classmethod
+    def add_instances(cls, player):
+        if player not in cls.instances:
+            cls.instances.append(player)
+        else:
+            pass
+
+    @classmethod
+    def add_undrafted(cls, player):
+        if player not in cls.undrafted:
+            cls.undrafted.append(player)
+        else:
+            pass
+
+    def __init__(self, first_name, last_name, team, position):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.name = f'{self.first_name} {self.last_name}'
+        self.team = team
+        self.position = position
+        Player.add_instances(self)
+        Player.add_undrafted(self)
+
+    def __repr__(self):
+        return self.name

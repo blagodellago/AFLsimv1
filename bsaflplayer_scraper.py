@@ -1,6 +1,6 @@
 #!/bin/python3
 #blago
-#5/6/20
+#5/8/20
 
 import requests
 import os
@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from csv import writer, reader
 from players_afl import Team, Player
 import pandas as pd
-import glob
+from glob import glob
 
 #SET THE FILE path
 path = '/Users/blakeedmond/Desktop/PythonCourse/AFLv2_simulator'
@@ -45,33 +45,44 @@ for team, url in teams_urls.items():
     with open(f'{filename}.csv', 'a') as csv_file:
         csv_writer = writer(csv_file)
         for player in player_stats:
-            last = player.find(class_='player-item__last-name').get_text()
-            position = player.find(class_='player-item__position').get_text()
-            csv_writer.writerow([last, team, position])
+            name_data = player.find(class_='player-item__name').get_text()
+            split_data = name_data.split()
+            first = split_data[0]
+            last = split_data[1]
+            position = split_data[2]
+            csv_writer.writerow([first, last, team, position])
 
-#CONCATENATE ALL TEAM_LISTS into one afl_list CSV file
-all_files = [i for i in glob.glob('*.csv')]
-combined_files = pd.concat([pd.read_csv(f) for f in all_files])
-combined_files.to_csv(f'{path}/combined_files.csv', index=False, encoding='utf-8-sig')
+#CONCATENATE ALL TEAM_LISTS into one afl_list CSV file: merge_csv(all_files, 'combined_files.csv')
+all_files = [i for i in glob('*.csv')]
+def merge_csv(all_files, merged_file):
+    combined_files = pd.concat([pd.read_csv(f, header=None) for f in all_files], axis=0)
+    combined_files.to_csv(f'{path}/{merged_file}', header=None, index=False, encoding='utf-8-sig')
 
-#GENERATE PLAYER OBJECTS from data contatined in combined_files.csv
+#GENERATE PLAYER/TEAM lists from data contatined in combined_files.csv
 os.chdir(path)
 club_names = []
-with open(f'{path}/combined_files.csv', 'r') as csv_file:
+player_names = []
+with open('combined_files.csv', 'r') as csv_file:
     csv_reader = reader(csv_file)
     next(csv_reader)
     for row in csv_reader:
-        Player(row[0], row[1], row[2])
-        if row[1] not in club_names:
-            club_names.append(row[1])
+        if row not in player_names:
+            player_names.append(row)
+        else:
+            continue
+        if row[2] not in club_names:
+            club_names.append(row[2])
         else:
             continue
 
-#GENERATE TEAM OBJECTS from data contained in combined_files.csv
+#GENERATE PLAYER/TEAM objects from data contained in combined_files.csv
 for club in club_names:
     Team(club)
 
-#DRAFT PLAYER OBJECTS into their respective team objects
+for player in player_names:
+    Player(player)
+
+# #DRAFT PLAYER OBJECTS into their respective team objects
 for team in Team.instances:
     for player in Player.undrafted:
         if player.team == team.name:

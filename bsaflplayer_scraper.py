@@ -11,8 +11,8 @@ import pandas as pd
 import glob
 
 #SET THE FILE path
-path = 'C:\Users\bedmo\Programming\Python_files\AFLv2_simulator'
-os.chdir(f'{path}\team_lists')
+path = 'C:\\Users\\bedmo\\Programming\\Python_files\\AFLv2_simulator'
+os.chdir(f'{path}\\team_lists')
 
 teams_urls = {
     'Adelaide Crows': 'https://www.afc.com.au/teams/afl',
